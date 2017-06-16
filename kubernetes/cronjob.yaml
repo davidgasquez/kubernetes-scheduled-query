@@ -1,0 +1,45 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: scheduled-query
+spec:
+  schedule: "*/15 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: scheduled-query
+            image: davidgasquez/scheduled-query:0.1.0
+            command: ["rsql"]
+            args: ["-n", "-A", "-F ','", "-f query.sql"]
+            env:
+              - name: REDSHIFT_DB_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: redshift
+                    key: database
+              - name: REDSHIFT_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: redshift
+                    key: user
+              - name: REDSHIFT_ENDPOINT
+                valueFrom:
+                  secretKeyRef:
+                    name: redshift
+                    key: endpoint
+              - name: REDSHIFT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: redshift
+                    key: password
+              - name: REDSHIFT_DB_PORT
+                valueFrom:
+                  secretKeyRef:
+                    name: redshift
+                    key: port
+            imagePullPolicy: Always
+          restartPolicy: OnFailure
