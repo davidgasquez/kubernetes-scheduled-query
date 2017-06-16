@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -u
+
+URI=postgres://$REDSHIFT_USER:$REDSHIFT_PASSWORD@$REDSHIFT_ENDPOINT:$REDSHIFT_DB_PORT/$REDSHIFT_DB_NAME
+
+psql $URI $@ 
