@@ -23,11 +23,12 @@ func main() {
 	port := os.Getenv("REDSHIFT_DB_PORT")
 
 	fileData, err := ioutil.ReadFile(os.Args[1])
-	query := string(fileData)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	query := string(fileData)
 
 	uri := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, endpoing, port, database)
 
