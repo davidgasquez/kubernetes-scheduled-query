@@ -9,19 +9,12 @@ import (
 	"os"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func main() {
 
 	if len(os.Args) != 2 {
 		fmt.Println("No query file given")
 		return
 	}
-
 
 	user := os.Getenv("REDSHIFT_USER")
 	password := os.Getenv("REDSHIFT_PASSWORD")
