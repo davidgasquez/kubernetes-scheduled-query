@@ -22,7 +22,6 @@ func main() {
 		return
 	}
 
-	filePath := os.Args[1]
 
 	user := os.Getenv("REDSHIFT_USER")
 	password := os.Getenv("REDSHIFT_PASSWORD")
@@ -30,14 +29,14 @@ func main() {
 	database := os.Getenv("REDSHIFT_DB_NAME")
 	port := os.Getenv("REDSHIFT_DB_PORT")
 
-	fileData, err := ioutil.ReadFile(filePath)
+	fileData, err := ioutil.ReadFile(os.Args[1])
 	query := string(fileData)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var uri string = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, endpoing, port, database)
+	uri := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, endpoing, port, database)
 
 	db, err := sql.Open("postgres", uri)
 	if err != nil {
