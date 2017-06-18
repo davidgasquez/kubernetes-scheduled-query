@@ -1,39 +1,43 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
+	_ "github.com/lib/pq"
+	"io/ioutil"
+	"log"
 	"os"
-    "fmt"
-    "database/sql"
-    _ "github.com/lib/pq"
-    "io/ioutil"
-    "log"
 )
 
 func check(e error) {
-    if e != nil {
-        panic(e)
-    }
+	if e != nil {
+		panic(e)
+	}
 }
 
 func main() {
-    
-    if len(os.Args) != 2 {
-        fmt.Println("No query file given")
-        return
-    }
-    
-    var filePath string = os.Args[1]
-    
-	var user string = os.Getenv("REDSHIFT_USER")
-	var password string = os.Getenv("REDSHIFT_PASSWORD")
-    var endpoing string = os.Getenv("REDSHIFT_ENDPOINT")
-    var database string = os.Getenv("REDSHIFT_DB_NAME")
-    var port string = os.Getenv("REDSHIFT_DB_PORT")
-    
-    fileData, err := ioutil.ReadFile(filePath)
-    query := string(fileData)    
 
-    var uri string = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, endpoing, port, database)
+	if len(os.Args) != 2 {
+		fmt.Println("No query file given")
+		return
+	}
+
+	filePath := os.Args[1]
+
+	user := os.Getenv("REDSHIFT_USER")
+	password := os.Getenv("REDSHIFT_PASSWORD")
+	endpoing := os.Getenv("REDSHIFT_ENDPOINT")
+	database := os.Getenv("REDSHIFT_DB_NAME")
+	port := os.Getenv("REDSHIFT_DB_PORT")
+
+	fileData, err := ioutil.ReadFile(filePath)
+	query := string(fileData)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var uri string = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, endpoing, port, database)
 
 	db, err := sql.Open("postgres", uri)
 	if err != nil {
@@ -41,10 +45,10 @@ func main() {
 	}
 
 	result, err := db.Exec(query)
-    
-    if err != nil {
-        log.Fatal(err)
-    }
 
-    fmt.Println(result)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(result)
 }
