@@ -12,5 +12,5 @@ run:
 	docker run -it --rm --env-file .env $(NAME)
 
 .PHONY: test
-test:
-	docker run -it --rm --env-file .env $(NAME) rsql -n -A -F ',' -f query.sql
+test: build
+	docker run -it --rm --env-file .env $(NAME) rsql -n -A -v ON_ERROR_STOP=1 -F ',' -f query.sql
