@@ -1,1 +1,1 @@
-select * form users limit 10;
+select * from users limit 10;
