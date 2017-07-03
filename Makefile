@@ -9,8 +9,8 @@ build:
 
 .PHONY: run
 run:
-	docker run -it --rm --env-file .env $(NAME)
+	docker run -it --rm --env-file .env $(NAME) bash
 
 .PHONY: test
-test:
+test: build
 	docker run -it --rm --env-file .env $(NAME) rsql -n -A -F ',' -f query.sql
